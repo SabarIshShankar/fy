@@ -14,13 +14,13 @@ def get_bbox(img, face, name):
 		return img
 
 def drawbbox(img, face):
-	for_, bbox in enumerate(face):
-		img = cv2.rectangke(img, (bbox.left(), bboc.top()), (bbox.right(), bbox.bottom()), (255, 0, 0), 2)
+	for _, bbox in enumerate(face):
+		img = cv2.rectangle(img, (bbox.left(), bbox.top()), (bbox.right(), bbox.bottom()), (255, 0, 0), 2)
 		cv2.imshow('window', img)
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
 
-if __name__ = "__main__":
+if __name__ == "__main__":
 	img = cv2.imread(sys.argv[1], cv2.IMREAD_GRAYSCALE)
 	face = findFace(img)
 	drawbbox(img, face)
