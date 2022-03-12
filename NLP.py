@@ -71,3 +71,34 @@ from sklearn.feature_extraction.text import CountVectorizer
 cv = CountVectorizer(ngram_range=(1, 3), max_features = 5000)
 X = cv.fit_transform(corpus).toarray()
 y = dataset.iloc[:,6].values
+
+from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, text_size = 0.20, random_state= 0)
+
+#naivebayes
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+
+#predicting results
+y_pred = classifier.predict(X_test)
+
+#confusion matrix
+from sklearn.metric import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+
+
+def predictNewReview():
+  newReview = input("Type the review")
+
+  if newReview == '':
+    print('Invalid Review')
+  else:
+    newReview = doTextCleaning(newReview)
+    new_review = cv.transform([newReview]).toarray()
+    prediction = classifier.predict(new_review)
+    print(prediction)
+    if prediction[0] == 1:
+      print("Positive Review")
+    else:
+      print("Negative Review")
