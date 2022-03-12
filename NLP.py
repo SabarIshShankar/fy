@@ -33,3 +33,30 @@ def removeApostrophe(review):
   phrase = re.sub(r"\'m", " am", review)
   phrase = re.sub(r"\'ve", " have", review)
   return phrase
+
+
+def removeAlphaNumericWords(review):
+  return re.sub("\S*\d\S*", "", review).strip()
+
+def removeSpecialChars(review):
+  return re.sub('[^s-zA-z]', ' ', review)
+
+def scorePartition(x):
+  if x < 3:
+    return 0
+  return 1
+
+def doTextCleaning(review):
+  review = removeHTMLTags(review)
+  review = removeApostrophe(review)
+  review = removeAlphaNumericWords(review)
+  review = removeSpecialChars(review)
+  review = review.lower()
+  review = review.split()
+  lmtzr = WordNetLemmatizer()
+  review = [lmtzr.lemmatize(word, 'v') for word in review if not word if not word in set(stopwords.words('english'))]
+  return review
+
+actualScore = dataset['Score']
+positiveNegative = actualScore.map(scorePartition)
+dataset['score'] = positiveNegative
