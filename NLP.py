@@ -60,3 +60,14 @@ def doTextCleaning(review):
 actualScore = dataset['Score']
 positiveNegative = actualScore.map(scorePartition)
 dataset['score'] = positiveNegative
+
+corpus = []
+for index, row in tqdm(dataset.iterrows()):
+  review = doTextCleaning(row['Text'])
+  corpus.append(review)
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+cv = CountVectorizer(ngram_range=(1, 3), max_features = 5000)
+X = cv.fit_transform(corpus).toarray()
+y = dataset.iloc[:,6].values
