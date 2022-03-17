@@ -70,12 +70,24 @@ plt.xasix('off')
 plt.title('the negative words')
 plt.show()
 
-import re
 def hashtag_extract(x):
-  hashtags = []
+    hashtags = []
+    
+    for i in x:
+        ht = re.findall(r"#(\w+)", i)
+        hashtags.append(ht)
 
-  for i in x:
-    ht = re.findall(r"#(\w+", i)
-    hashtags.append(ht)
+    return hashtags
 
-  return hashtags
+HT_regular = hashtag_extract(train['tweet'][train['label'] == 0])
+HT_negative = hashtag_extract(train['tweet'][train['label'] == 1])
+HT_regular = sum(HT_regular,[])
+HT_negative = sum(HT_negative,[])
+
+a = nltk.FreqDist(HT_regular)
+d = pd.DataFrame({'Hashtag': list(a.keys()), 'Count': list(a.values())})
+d = d.nlargest(columns = "Count", n=20)
+plt.figure(figsize=(16, 5))
+ax = sns.barplot(data=d, x = "Hashtag", y = "Count")
+ax.set(ylabel="Count")
+plt.show()
