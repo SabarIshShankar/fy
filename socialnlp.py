@@ -84,6 +84,7 @@ HT_negative = hashtag_extract(train['tweet'][train['label'] == 1])
 HT_regular = sum(HT_regular,[])
 HT_negative = sum(HT_negative,[])
 
+import nltk
 a = nltk.FreqDist(HT_regular)
 d = pd.DataFrame({'Hashtag': list(a.keys()), 'Count': list(a.values())})
 d = d.nlargest(columns = "Count", n=20)
@@ -91,3 +92,42 @@ plt.figure(figsize=(16, 5))
 ax = sns.barplot(data=d, x = "Hashtag", y = "Count")
 ax.set(ylabel="Count")
 plt.show()
+
+a = nltk.FreqDist(HT_negative)
+d = pd.DataFrame({'Hashtag':list(a.keys()), 'Count': list(a.values())})
+d = d.nlargest(columns="Count", n=20)
+plt.figure(figsize=(16, 5))
+ax = sns.barplot(data=d, x="Hashtag", y ="Count")
+ax.set(ylabel="Count")
+plt.show()
+
+import gensim #generate similar
+tokenized_tweet =  train['tweet'].apply(lambda x:x.split()) #break up the strings
+model_w2v = gensim.models.Word2Vec(tokenized_tweet, size=200,
+                                   window=5,
+                                   min_count=2,
+                                   sg=1,
+                                   hs=0,
+                                   negative=10,
+                                   workers=2,
+                                   seed=34)
+model_w2v.train(tokenized_tweet, total_examples = len(train['tweet']), epochs=20)
+
+model_w2v.wv.most_similar(positive="dinner")
+
+model_w2v.wv.most_similar(positive="apple")
+
+model_w2v.wv.most_similar(positive="law")
+
+from tqdm import tqdm
+tqdm.pandas(desc="progress-bar")
+from gensim.models.doc2vec import LabeledSentence
+
+def add_label(twt):
+  output=[]
+  for i, s in zip(twt.index, twt):
+    output.append(LabeledSentence(s, ["tweet_" + str(i)]))
+  return output
+
+labeled_tweets = add_label(tokenized_tweet)
+labeled_tweets[:6]
