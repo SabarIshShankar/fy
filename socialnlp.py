@@ -190,3 +190,65 @@ print(y_train.shape)
 print(y_valid.shape)
 
 #train/test is tp measure accuracy of data, 80% training, 20%testing
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+
+#deviation as 1 and mean as 0
+#normalizing the data
+
+x_train = sc.fit_transform(x_train)
+x_valid = sc.transform(x_valid)
+x_test = sc.transform(x_test)
+
+
+
+from sklearn.ensemble import RandomForestClassifier
+#made of different decision trees, uses randomness to create forests with data
+from sklearn.metrics import confusion_matrix
+#classification algorithm
+from sklearn.metrics import f1_score
+#says about the precision -  false positive 
+
+model = RandomForestClassifier()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_valid)
+
+print("Training accuracy: ", model.score(x_train, y_train))
+print("Validation accuray: ", model.score(x_valid, y_pred))
+print("F1 score:", f1_score(y_valid, y_pred))
+
+cm = confusion_matrix(y_valid, y_pred)
+print(cm)
+
+
+
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier()
+model.fit(x_train, y_train)
+
+y_pred = model.predict(x_valid)
+
+print("Training accuracy:", model.score(x_train, y_train))
+print("Validation accuracy:",  model.score(x_valid, y_valid))
+
+print("f1 score:",f1_score(y_valid, y_pred))
+
+cm = confusion_matrix(y_valid, y_pred)
+print(cm)
+
+
+from sklearn.svm import SVC
+#support vector machine - support vector classifier
+model = SVC()
+model.fit(x_train, y_train)
+
+y_pred = model.predict(x_valid)
+
+print("Training accuracy:", model.score(x_train, y_train))
+print("Validation accuracy:", model.score(x_valid, y_valid))
+print("f1 score:", f1_score(y_valid, y_pred))
+
+cm = confusion_matrix(y_valid, y_pred)
+print(cm)
