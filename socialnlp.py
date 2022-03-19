@@ -131,3 +131,43 @@ def add_label(twt):
 
 labeled_tweets = add_label(tokenized_tweet)
 labeled_tweets[:6]
+
+nltk.download('stopwords') #stopwords
+from nltk.corpus import stopwords #corpus reads the text
+from nltk.stem.porter import PorterStemmer
+#porter stemmer reduces different words into one
+
+train_corpus = []
+#total number of social text
+for i in range(0, 31962): 
+  review = re.sub('[^a-zA-Z]', '', train['tweet'][i])
+  review = review.lower()
+  review = review.split()
+
+  ps = PorterStemmer()
+  review = [ps.stem(word) for word in review if not word in set(stopwords.words('english'))]
+
+  review = ''.join(review)
+  train_corpus.append(review)
+
+test_corpus = []
+for i in range(0, 17197):
+  review = re.sub('[^a-zA-Z]', '', test['tweet'][i])
+  review =  review.lower()
+  review = review.split()
+
+  ps = PorterStemmer()
+  review = [ps.stem(word) for word in review if not word in set(stopwords.words('english'))]
+  review = ''.join(review)
+  test_corpus.append(review)
+
+
+from sklearn.feature_extraction.text import CountVectorizer
+#scikit learn used for feature extaction (reducing the number)
+#and count vectorizer is used to convert the text into vectors which acts like a list
+cv = CountVectorizer(max_features = 2500)
+x = cv.fit_transform(train_corpus).toarray()
+y = train.iloc[:, 1]
+
+print(x.shape)
+print(y.shape)
