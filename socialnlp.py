@@ -171,3 +171,22 @@ y = train.iloc[:, 1]
 
 print(x.shape)
 print(y.shape)
+
+
+#bag of words
+
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer(max_features = 2500)
+
+x_test = cv.fit_transform(test_corpus).toarray()
+print(x_test.shape)
+
+from sklearn.model_selection import train_test_split
+x_train, x_valid, y_train, y_valid =  train_test_split(x, y, test_size = 0.25, random_state = 42)
+
+print(x_train.shape)
+print(x_valid.shape)
+print(y_train.shape)
+print(y_valid.shape)
+
+#train/test is tp measure accuracy of data, 80% training, 20%testing
